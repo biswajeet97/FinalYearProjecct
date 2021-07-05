@@ -1,0 +1,32 @@
+{
+  "name": "letsplaychess.com",
+  "version": "1.0.0",
+  "description": "this is a multiplayer chess application designed to play a game of chess. with other player and AI. ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biswajeet_97/letsplaychess.com.git"
+  },
+  "author": "Biswajeet singh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/biswajeet_97/letsplaychess.com/issues"
+  },
+  "homepage": "https://github.com/biswajeet_97/letsplaychess.com#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "https": "^1.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.14",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "socket.io": "^3.1.0"
+  }
+}

@@ -1,0 +1,20 @@
+<div class="back">
+    <mat-card class="login">
+      <h1>Welcome Back</h1>
+      <form [formGroup]="newUser" (ngSubmit)="onSubmit()">
+            <mat-form-field class="feild">
+                <mat-label>Username</mat-label>
+                <input matInput placeholder="" formControlName="username">
+              </mat-form-field>
+            
+              <mat-form-field class="feild">
+                <mat-label>Password</mat-label>
+                <input type="password"  matInput placeholder=""formControlName="password">
+              </mat-form-field>
+              <button mat-button class="forget" >Forget Password</button>
+              <button mat-button class="submit" type="submit">Login</button>
+              <h4>Dont have an account?</h4>
+              <button mat-button class="register" >Register Here</button>
+        </form>
+    </mat-card>
+</div>

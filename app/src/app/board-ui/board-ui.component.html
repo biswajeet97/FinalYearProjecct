@@ -1,0 +1,523 @@
+<mat-drawer-container class="example-container">
+    <mat-drawer mode="side" opened style="width: 200px; background-color: #F1F1F1;">
+        <h3>Bot</h3>
+        <!-- list of bots -->
+        <mat-card style="height: 65px;background-color: #9AECED; margin-left: -14px;">
+            <h4>BotaRobo</h4>
+            <button mat-button (click)='aI()' 
+            style="display: inline-block;position: relative;top: -50px;left: 95px; background-color: #495288;color: antiquewhite;">
+                Challenge
+            </button>
+            <mat-form-field appearance="fill" style="display: inline-block; position: relative; top: -55px;">
+                <mat-label>Side</mat-label>
+                <mat-select [(ngModel)]="selectedSide" name="side">
+                    <mat-option *ngFor="let side of sides" [value]="side.value">
+                        {{side.viewChild}}
+                    </mat-option>                    
+                </mat-select>
+            </mat-form-field>
+        </mat-card>
+
+        <h3 style="position: relative; top: 20px;">Friends</h3>
+        <!-- lists of friends -->
+        <div *ngIf="opp">
+            <mat-card style="height: 100px;background-color: #9AECED; margin-left: -14px;">
+                <h4>{{opp}}</h4>
+                <mat-form-field appearance="fill" style="display: inline-block; position: relative; top: -35px;">
+                    <mat-label>Side</mat-label>
+                    <mat-select [(ngModel)]="selectedSide" name="side">
+                        <mat-option *ngFor="let side of sides" [value]="side.value">
+                            {{side.viewChild}}
+                        </mat-option>                    
+                    </mat-select>
+                </mat-form-field>
+                
+                <button mat-button (click)="acceptChallenge()" 
+                style="display: inline-block;position: relative;top: -50px;left: 95px; background-color: #495288;color: antiquewhite;">
+                    Accept
+                </button>
+            </mat-card>    
+        </div>
+        <div *ngFor="let friend of friends">
+            <mat-card style="height: 17px;background-color: #9AECED; margin-left: -14px;">
+                <h4>{{friend}}</h4>
+
+                <button mat-button (click)="challenge(friend)" 
+                style="display: inline-block;position: relative;top: -50px;left: 95px; background-color: #495288;color: antiquewhite;">
+                    Challenge
+                </button>
+            </mat-card>
+           
+        </div>
+        
+        <!-- feild to find user -->
+        <mat-card style="height: 50px;">
+            <form [formGroup]="friend" style="display:inline-block; width: 100px ; position: relative; left: -10px;">
+                <mat-form-field class="feild">
+                    <mat-label>Username</mat-label>
+                    <input matInput placeholder="" formControlName="username" >
+                </mat-form-field>
+                <button (click)="findFriend()" mat-button style="display: inline-block;position: relative;top: -55px;left: 120px; background-color: #495288;color: antiquewhite;">Find</button>
+            </form>
+        </mat-card>
+
+        <!-- found user -->
+        <div *ngIf="newFriend">
+            <mat-card style="height: 17px;background-color: #9AECED; margin-left: -14px;">
+                <h4>{{newFriend}}</h4>
+                <button mat-button (click)="invitePlayer()" 
+                style="display: inline-block;position: relative;top: -50px;left: 95px; background-color: #495288;color: antiquewhite;">
+                    Invite player
+                </button>
+            </mat-card>    
+        </div>
+        <div *ngIf="invitedFriend.from">
+            <mat-card style="height: 17px;background-color: #9AECED; margin-left: -14px;">
+                <h4>{{invitedFriend.from}}</h4>
+                <button mat-button (click)="addFriend()" 
+                style="display: inline-block;position: relative;top: -50px;left: 95px; background-color: #495288;color: antiquewhite;">
+                    Add Friend
+                </button>
+            </mat-card>    
+        </div>
+
+        
+    </mat-drawer>
+    <mat-drawer-content style="padding-top: 15px;">
+        <div class="user">Opponent</div>
+        <div id="board" >
+            <!-- this is the white board -->
+            <table id="whiteBoard">
+                <tr>
+                    <td>
+                        <div class="white" id="91w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="92w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="93w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="94w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="95w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="96w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="97w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="98w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="black" id="81w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="82w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="83w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="84w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="85w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="86w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="87w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="88w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="white" id="71w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="72w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="73w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="74w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="75w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="76w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="77w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="78w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="black" id="61w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="62w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="63w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="64w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="65w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="66w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="67w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="68w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="white" id="51w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="52w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="53w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="54w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="55w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="56w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="57w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="58w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="black" id="41w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="42w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="43w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="44w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="45w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="46w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="47w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="48w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="white" id="31w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="32w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="33w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="34w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="35w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="36w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="37w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="38w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="black" id="21w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="22w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="23w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="24w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="25w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="26w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="27w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="28w" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- This is the blacks board -->
+            <table id="blackBoard">
+                <tr>
+                    <td>
+                        <div class="black" id="21b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="22b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="23b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="24b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="25b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="26b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="27b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="28b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="white" id="31b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="32b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="33b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="34b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="35b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="36b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="37b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="38b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="black" id="41b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="42b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="43b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="44b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="45b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="46b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="47b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="48b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="white" id="51b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="52b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="53b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="54b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="55b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="56b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="57b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="58b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="black" id="61b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="62b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="63b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="64b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="65b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="66b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="67b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="68b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="white" id="71b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="72b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="73b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="74b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="75b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="76b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="77b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="78b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="black" id="81b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="82b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="83b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="84b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="85b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="86b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="87b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="88b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="white" id="91b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="92b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="93b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="94b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="95b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="96b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="white" id="97b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                    <td>
+                        <div class="black" id="98b" (drop)="drop($event) "(dragover)="allowDrop($event)"></div>
+                    </td>
+                </tr>
+            </table>    
+        </div>
+
+        <div class="user">Me</div>
+        <div class="moves">Moves</div>
+        <div class="chat">Message here</div>
+
+
+
+    </mat-drawer-content>
+  </mat-drawer-container>
+
+
